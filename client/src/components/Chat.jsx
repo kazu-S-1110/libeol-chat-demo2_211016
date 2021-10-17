@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { io } from 'socket.io-client';
 
 const Chat = ({ name }) => {
   const [messages, setMessages] = useState([
@@ -9,6 +10,36 @@ const Chat = ({ name }) => {
   ]);
 
   const [text, setText] = useState('');
+
+  const socketRef = useRef();
+
+  useEffect(() => {
+    console.log('connecting...');
+    socketRef.current = io();
+    socketRef.current.on('broadcast', (payload) => {
+      console.log('Received: ' + payload);
+      setMessages((prevMessages) => [...prevMessages, payload]);
+    });
+    return () => {
+      console.log('Disconnecting...');
+      socketRef.current.disconnect();
+    };
+  }, []);
+
+  const handleInputChange = (e) => {
+    setText(e.target.value);
+  };
+
+  const handleButtonClick = (e) => {
+    const aMessage = {
+      name: name,
+      text: text,
+    };
+    socketRef.current.emit('send', aMessage);
+    setMessages((prevMessages) => [...prevMessages, aMessage]);
+    setText('');
+  };
+
   return (
     <>
       <div className="input">
