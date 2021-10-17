@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
+import Message from './Message';
 
 const Chat = ({ name }) => {
   const [messages, setMessages] = useState([

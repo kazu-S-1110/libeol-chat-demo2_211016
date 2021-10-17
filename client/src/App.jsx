@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Chat from './Chat';
-import { Operation } from './Operation';
+import Chat from './components/Chat';
+import { Operation } from './components/Operation';
 
 const App = () => {
   const [entered, setEntered] = useState(false);
